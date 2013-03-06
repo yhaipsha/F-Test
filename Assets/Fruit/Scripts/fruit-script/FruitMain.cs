@@ -38,7 +38,7 @@ public class FruitMain : MonoBehaviour
 //			}
 //			PlayerPrefs.SetInt ("loading", 1);
 			
-//			print ("loading... level1 = " + Globe.askbox.Count);
+			print ("loading... is over !" + Globe.askbox.Count);
 //			print ("loading... level2 = " + Globe.askbox2.Count);
 //			print ("loading... level3 = " + Globe.askbox3.Count);
 		}

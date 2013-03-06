@@ -69,7 +69,7 @@ public class GamePlayLayer : MonoBehaviour
 		initTitle(time);
 		initStar ();		
 		initGameWindow ();
-		createButtons ();
+//		createButtons ();
 	}
 
 	void initTitle (string time)
@@ -159,6 +159,7 @@ public class GamePlayLayer : MonoBehaviour
 			if (_nowMode == 1) 
 				Globe.askatlases.Add ("boxfind" + Globe.box [j]);
 		}
+		print (Globe.askatlases.Count);
 	}
 	void createAtlases2 (List<string[]> item)
 	{

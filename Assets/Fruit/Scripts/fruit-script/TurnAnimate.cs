@@ -48,7 +48,8 @@ public class TurnAnimate : MonoBehaviour
 
 	void OnClick ()
 	{		
-		if (sprite != null && spriteBg != null) {	
+//		if (sprite != null && spriteBg != null) 
+		{	
 			switch (PlayerPrefs.GetInt ("NowMode")) {
 			case 1:
 				SendMessageUpwards ("mode1", transform.name);

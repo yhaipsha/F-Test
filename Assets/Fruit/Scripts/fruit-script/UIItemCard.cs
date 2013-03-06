@@ -76,7 +76,7 @@ public class UIItemCard : MonoBehaviour
         {
 			#region 添加脚本 UIButtonTween
 
-			
+			/*
             bt = tempObj.AddComponent<UIButtonTween>();
             bt.tweenTarget = transform.parent.parent.gameObject;
             bt.includeChildren = true;
@@ -96,7 +96,7 @@ public class UIItemCard : MonoBehaviour
             bt.disableWhenFinished = AnimationOrTween.DisableCondition.DisableAfterReverse;
             bt.trigger = AnimationOrTween.Trigger.OnClick;
             bt.playDirection = AnimationOrTween.Direction.Forward;
-			/**/
+			*/
 			#endregion
 			
             tempObj.AddComponent("SelectedLevel");

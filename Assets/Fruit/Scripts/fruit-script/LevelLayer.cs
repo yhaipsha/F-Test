@@ -12,12 +12,6 @@ public class LevelLayer : MonoBehaviour
 		itemCardLayer ();
 	}
 	Transform levelOffsetGo ;
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
-
 	void init ()
 	{
 		transform.FindChild ("LabelCaption").GetComponent<UILabel> ().text = PlayerPrefs.GetString ("NowModeCaption");
@@ -34,7 +28,7 @@ public class LevelLayer : MonoBehaviour
 	{
 		int maxItem = 0;
 		int pages = 1;
-
+		print (levelOffsetGo.name);
 		switch (PlayerPrefs.GetInt ("NowMode")) {
 		case 1:
 			maxItem = 50;

@@ -34,7 +34,7 @@ public class GotoScene : MonoBehaviour
 			
 		case "-Help":
 //			this.SendMessageUpwards ("cleanLevels");
-			Application.LoadLevel ("Help");
+			Application.LoadLevel ("FruitMain phone");
 			break;
 			
 		case "-Set":
@@ -45,6 +45,17 @@ public class GotoScene : MonoBehaviour
 		case "-Level":
 //			this.SendMessageUpwards ("cleanLevels");
 			Application.LoadLevel ("Level");
+			break;
+			
+		 case "-Replay":
+//			this.SendMessageUpwards ("cleanLevels");			
+			Application.LoadLevel ("Game2");
+			break;
+			
+		case "-Next":
+//			this.SendMessageUpwards ("cleanLevels");	
+			PlayerPrefs.SetInt("NowPlay",PlayerPrefs.GetInt("NowPlay")+1);
+			Application.LoadLevel ("Game2");
 			break;
 		}
 
