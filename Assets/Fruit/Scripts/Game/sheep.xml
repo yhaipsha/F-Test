@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SysData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <_iUser>
+    <x>0</x>
+    <y>0</y>
+    <z>0</z>
+    <name>linmu</name>
+  </_iUser>
+  <SysName>测试系统</SysName>
+  <Number>1</Number>
+  <ColorList>
+    <anyType xsi:type="xsd:string">White</anyType>
+    <anyType xsi:type="xsd:string">[FF0066]Red</anyType>
+    <anyType xsi:type="xsd:string">[99FF66]Green</anyType>
+    <anyType xsi:type="xsd:string">Blue</anyType>
+    <anyType xsi:type="xsd:string">Yellow</anyType>
+    <anyType xsi:type="xsd:string">Cyan</anyType>
+    <anyType xsi:type="xsd:string">Magenta</anyType>
+  </ColorList>
+  <Volume>0.5</Volume>
+</SysData>
