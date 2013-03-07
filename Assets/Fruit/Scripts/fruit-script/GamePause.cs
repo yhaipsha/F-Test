@@ -1,29 +1,35 @@
 using UnityEngine;
 using System.Collections;
 
+public delegate void closeCollider ();
+
 public class GamePause : MonoBehaviour
 {
-	
-	public Transform transMaskPanel;
-	
-	void Update()
+	public event closeCollider EventPause;
+	void Update ()
 	{
-		if (PlayerPrefs.GetInt("game_animate_over") == 1) {
-//			transMaskPanel.
+		if (transform.position.y == 0) {
+			colliderState (true);
+		}
+		if (transform.position.y < -1) {
+			colliderState (false);
 		}
 	}
-	void OnClick ()
+	
+	void colliderState (bool on)
 	{
-		if (transMaskPanel != null) {
+		Transform ts = this.transform.FindChild ("SlicedSpriteMask");
+		if (ts != null) {
 							
-			UISlicedSprite uisp = transMaskPanel.GetComponent<UISlicedSprite> ();
-			uisp.color= new Color (1.0f, 1.0f, 1.0f, 0.65f);
+			UISlicedSprite uisp = ts.GetComponent<UISlicedSprite> ();
+			uisp.color = new Color (1.0f, 1.0f, 1.0f, 0.65f);
 				
-			BoxCollider box = transMaskPanel.GetComponent<BoxCollider> ();
-			if (box.enabled) {
-				box.enabled=false;
-			}else
-				box.enabled=true;
-		}
+			BoxCollider box = ts.GetComponent<BoxCollider> ();
+//			if (box.enabled) {
+//				box.enabled=false;
+//			}else
+				box.enabled = on;
+		}			
 	}
+	
 }

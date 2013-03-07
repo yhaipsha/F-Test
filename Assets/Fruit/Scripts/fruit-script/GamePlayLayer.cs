@@ -5,11 +5,12 @@ public class GamePlayLayer : MonoBehaviour
 {
 	//定义委托，显示关卡和错误次数。	
 	public delegate void showLevel (string levelname);
+
 	public event showLevel EventShowLevel;
 
 	private Transform goButtons = null;
-	private int _nowPlay=1;
-	private int _nowMode=1;
+	private int _nowPlay = 1;
+	private int _nowMode = 1;
 	// Use this for initialization
 	void Start ()
 	{
@@ -22,9 +23,11 @@ public class GamePlayLayer : MonoBehaviour
 //			OnLayer();
 //		}
 //	}
-	void Awake() {
-		OnLayer();
+	void Awake ()
+	{
+		OnLayer ();
 	}
+
 	public void cleanButtons ()
 	{
 		if (goButtons != null)
@@ -43,32 +46,38 @@ public class GamePlayLayer : MonoBehaviour
 		_nowMode = PlayerPrefs.GetInt ("NowMode");
 		print ("current Level is " + _nowPlay + "; current Mode is " + _nowMode);
 		
-//		Transform transFruit = transform.FindChild ("ExampleFruit");
+		int cards = 0;
 		string time = string.Empty;
 		switch (_nowMode) {
 		case 1:
-			Globe.errorCount=3;
-			time = Globe.errorCount.ToString();			
-			createAtlases(PlayerPrefs.GetString("first"+(_nowPlay-1)).Split(','));
+			Globe.errorCount = 3;
+			time = Globe.errorCount.ToString ();			
+			cards = createAtlases (PlayerPrefs.GetString ("first" + (_nowPlay - 1)).Split (','));
 //			createAtlases (Globe.askbox);						
 			print ("current level is " + _nowPlay + " from 1 ,and findCount = " + Globe.findCount);			
 			break;
 		case 2:
-			Globe.errorCount=1;
-			time = Globe.errorCount.ToString();	//每一个关卡 允许错误次数
-			createAtlases(PlayerPrefs.GetString("second"+(_nowPlay-1)).Split(','));
+			Globe.errorCount = 1;
+			time = Globe.errorCount.ToString ();	//每一个关卡 允许错误次数
+			cards = createAtlases (PlayerPrefs.GetString ("second" + (_nowPlay - 1)).Split (','));
 //			createAtlases (Globe.askbox2);
 			break;
 		case 3:
 			time = "0:30";//30
-			createAtlases(PlayerPrefs.GetString("third"+(_nowPlay-1)).Split(','));
+			cards = createAtlases (PlayerPrefs.GetString ("third" + (_nowPlay - 1)).Split (','));
 //			createAtlases (Globe.askbox3);
 			break;
 			
 		}
-		initTitle(time);
+		initTitle (time);
 		initStar ();		
-		initGameWindow ();
+//		initGameWindow ();
+		
+		PlayerPrefs.DeleteKey ("cardReady");
+		string[] names = Globe.cards.ToArray ();
+		ArrayRandom.FillRandomArray (ref names);
+		DecorateGamePlay (names, cards);
+		
 //		createButtons ();
 	}
 
@@ -83,13 +92,12 @@ public class GamePlayLayer : MonoBehaviour
 		
 		Transform transFruit = transTitle.FindChild ("ExampleFruit");
 		if (_nowMode == 1) {
-		UISlicedSprite ssp = transFruit.GetComponent<UISlicedSprite> ();
-		ssp.enabled=false;
-		ssp.spriteName = Globe.askatlases [Globe.askatlases.Count - 1];//only normal mode
-		print ("look for sprite =" + ssp.spriteName);
+			UISlicedSprite ssp = transFruit.GetComponent<UISlicedSprite> ();
+			ssp.enabled = false;
+			ssp.spriteName = Globe.askatlases [Globe.askatlases.Count - 1];//only normal mode
+			print ("look for sprite =" + ssp.spriteName);
 					
-		}else
-		{
+		} else {
 			transFruit.gameObject.SetActive (false);
 		}
 	}
@@ -110,15 +118,9 @@ public class GamePlayLayer : MonoBehaviour
 			}			
 		}
 	}
-	
 
 	public void initGameWindow ()
 	{
-		PlayerPrefs.DeleteKey ("cardReady");
-		string[] names = Globe.cards.ToArray ();
-		ArrayRandom.FillRandomArray (ref names);
-		DecorateGamePlay (names);
-
 		/*
         for (int i = 0; i < arrSp.Length; i++) {
             arrSp [i] = "box" + Globe.box [box1_1 [i]];		
@@ -136,11 +138,12 @@ public class GamePlayLayer : MonoBehaviour
 
 	}
 	
-	void createAtlases (string[] item)
+	int createAtlases (string[] item)
 	{
 //		print (item[0]+"?"+item[1]);
 		//头图片个数  选取数组最后一个Globe.askbox
 		int maxCard = item.Length;
+		int cardCount = 0;
 		Globe.box = new ArrayRandom (maxCard).NonRepeatArray (1, 16);
 		Globe.cards = new List<string> ();
 		Globe.askatlases = new List<string> ();
@@ -158,9 +161,11 @@ public class GamePlayLayer : MonoBehaviour
 			}
 			if (_nowMode == 1) 
 				Globe.askatlases.Add ("boxfind" + Globe.box [j]);
+			cardCount += __count;
 		}
-		print (Globe.askatlases.Count);
+		return cardCount;
 	}
+
 	void createAtlases2 (List<string[]> item)
 	{
 		//头图片个数  选取数组最后一个Globe.askbox
@@ -204,12 +209,13 @@ public class GamePlayLayer : MonoBehaviour
 	/// <param name='names'>
 	/// Names.
 	/// </param>
-	void DecorateGamePlay (string[] names)
+	void DecorateGamePlay (string[] names, int cardCount)
 	{
 		string str = string.Empty;
 		foreach (string item in names) {
 			str += item + ",";
 		}
+		print (str.Substring (0, str.Length - 1)+"/?"+cardCount);
 		if (_nowMode == 1) 
 			print (str.Substring (0, str.Length - 1) + " findName = " + Globe.askatlases [Globe.askatlases.Count - 1]);
 		
@@ -217,11 +223,11 @@ public class GamePlayLayer : MonoBehaviour
 		UIItemStorageTest ut = transGameWindow.GetComponent<UIItemStorageTest> ();
 		
 		//		Globe.cards.Count
-		if (_nowPlay <= 4) {
+		if (cardCount <= 8) {
 			ut.maxColumns = 3;
 			ut.maxRows = 4;
 			ut.transform.localPosition = Globe.cardPanel1;
-		} else if (_nowPlay > 4 && _nowPlay <= 12) {
+		} else if (cardCount > 8 && _nowPlay <= 12) {
 			ut.maxColumns = 5;
 			ut.maxRows = 4;
 			ut.transform.localPosition = Globe.cardPanel2;
@@ -249,7 +255,7 @@ public class GamePlayLayer : MonoBehaviour
 		}
 		
 		PlayerPrefs.SetInt ("cardReady", 1);
-		transGameWindow.GetComponent<TurnManager>().init(1);
+		transGameWindow.GetComponent<TurnManager> ().init (1);
 
 		//		else if (PlayerPrefs.GetInt ("PanelGamePlay") == -1) {
 		//			//中途退出

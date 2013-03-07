@@ -8,7 +8,7 @@ public class GameWinLayer : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-//		init (PlayerPrefs.GetInt ("result"));
+		init (PlayerPrefs.GetInt ("result"));
 	}
 	
 	public void init (int result)
@@ -40,7 +40,7 @@ public class GameWinLayer : MonoBehaviour
 	
 	void showResultSprite (bool on, string spriteName)
 	{
-		transform.FindChild ("DownButtons").FindChild ("p2BtnNext").gameObject.SetActive (on);
+		transform.FindChild ("DownButtons").FindChild ("p2Btn-Next").gameObject.SetActive (on);
 		UISprite sp = transform.FindChild ("Show").FindChild ("SlicedSprite").GetComponent<UISlicedSprite> ();
 		sp.spriteName = spriteName;
 		print (spriteName);

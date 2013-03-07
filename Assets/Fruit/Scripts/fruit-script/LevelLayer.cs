@@ -59,7 +59,7 @@ public class LevelLayer : MonoBehaviour
 
 		panel.clipRange = v4;
 		card.transform.parent.localPosition = new Vector3 (0f, 0f, 0f);
-		card.transform.localPosition = new Vector3 (-311f, 225f, -10f);
+		card.transform.localPosition = new Vector3 (-311f, 225f, -1f);
                 
 
 		card.maxItemCount = maxItem;

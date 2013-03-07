@@ -147,7 +147,7 @@ public class TurnRight3 : MonoBehaviour
 					
 //				transform.parent.parent.FindChild ("LabelTime").GetComponent<UILabel> ().text = (3 - Globe.differentSize.Count).ToString ();
 				if (Globe.differentSize.Count >= 3) {
-					ra.toPanelWin (0);
+//					ra.toPanelWin (0);
 				}
 			}
 

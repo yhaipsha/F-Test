@@ -13,11 +13,12 @@ public class TurnManager : MonoBehaviour
 	public Transform transTimes;
 	public Transform transLable;
 	int initialized = 0;
+	int _mode = 0;
 	UISlicedSprite spHead;
 	ExampleAtlas examObj;
 	float backTime;//用于计数的变量
 	
-	private bool autoReverse=false;
+	private bool autoReverse = false;
 	int clickCount = 0;
 	private bool isBegin = false;
 	Quaternion qua;
@@ -27,20 +28,29 @@ public class TurnManager : MonoBehaviour
 	bool beginTurn = false;
 	bool punish = false;
 	TurnAnimate ta;
-
+	
+	bool clearance=false;
+	void toPanelWin (int result)
+	{
+		if (PlayerPrefs.GetInt ("turn_go_over") == 1 && clearance) {	
+			PlayerPrefs.SetInt("result",result);
+			PlayerPrefs.DeleteKey("turn_go_over");
+			Application.LoadLevel("GameUpshot");			
+		}
+	}
+	
 	void doPunish (string name)
 	{
 		
-		print (name + "?" + Globe.tmpString);
-			if (name != Globe.tmpString) {
-				Destroy (getTransOfSprite (name).gameObject);	
-				Destroy (getTransOfSprite (Globe.tmpString).gameObject);				
-				Globe.tmpString = null;
-				Globe.punish = false;
-			}
-			if (transform.GetChildCount () <= 2) {
-				transExample.GetComponent<ExampleAtlas> ().toPanelWin (1);
-			}
+		if (name != Globe.tmpString && Globe.punish) {
+			Destroy (getTransOfSprite (name).gameObject);	
+			Destroy (getTransOfSprite (Globe.tmpString).gameObject);				
+			Globe.tmpString = null;
+			Globe.punish = false;
+		}
+		if (transform.GetChildCount () <= 2) {
+			toPanelWin (1);
+		}
 		
 //		switch (PlayerPrefs.GetInt("NowMode")) {
 //		case 1:
@@ -59,6 +69,7 @@ public class TurnManager : MonoBehaviour
 		//
 //		getTransOfSprite (name).collider.enabled=true;
 	}
+
 	void Start ()
 	{							
 		Globe.sameSize = new System.Collections.Generic.Dictionary<string, int> ();
@@ -74,27 +85,49 @@ public class TurnManager : MonoBehaviour
 
 	void Update ()
 	{
-		if (initialized == 2 && PlayerPrefs.GetInt ("NowMode") != 3) {			
-			initialized = 0;
+		_mode = PlayerPrefs.GetInt ("NowMode");
+		if (initialized == 2 && _mode == 1) {			
 			examPlay ();	
 			init (2);
-			PlayerPrefs.DeleteKey ("cardReady");
-		}
-		
-		if (initialized == 2 && PlayerPrefs.GetInt ("NowMode") == 3) {
-//			print (backTime.ToString ("F0"));//每帧都更新时间变化，F0表示小数点后显示0位，如果你需要可以改变0为相应的位数！		
-			backTime = backTime - Time.deltaTime;//总时间i减去每帧消耗的时间，当然就等于当前时间啦，对吧？
-			transTimes.GetComponent<UILabel> ().text ="0:"+ backTime.ToString ("F0");	
-			
-			if(backTime>29.0f){
-				init (2);
+			if (PlayerPrefs.GetInt ("animate_exam_over") == 1) {
+				init (3);
+				initialized = 0;//reset initialized
+				PlayerPrefs.DeleteKey ("animate_exam_over");
 				PlayerPrefs.DeleteKey ("cardReady");
-			}else if(backTime<=0.0f)
-			{
-				examObj.toPanelWin (0);
 			}
 		}
 		
+		if (initialized == 2 && _mode == 2) {			
+			initialized = 0;
+			examPlay ();	
+			init (2);
+			if (PlayerPrefs.GetInt ("animate_exam_over") == 1) {
+				init (3);
+				initialized = 0;
+				PlayerPrefs.DeleteKey ("cardReady");
+			}
+		}
+		
+		//--------------游戏过程
+		if (initialized == 2 && _mode == 3) {
+//			print (backTime.ToString ("F0"));//每帧都更新时间变化，F0表示小数点后显示0位，如果你需要可以改变0为相应的位数！		
+			backTime = backTime - Time.deltaTime;//总时间i减去每帧消耗的时间，当然就等于当前时间啦，对吧？
+			transTimes.GetComponent<UILabel> ().text = "0:" + backTime.ToString ("F0");	
+			
+			if (backTime > 29.0f) {
+				init (2);
+				PlayerPrefs.DeleteKey ("cardReady");
+			} else if (backTime <= 0.0f) {
+//				examObj.toPanelWin (0);
+				toPanelWin (0);
+			}
+		}
+		
+		//-------------提交提示图片
+//		if (examObj != null && PlayerPrefs.GetInt ("turn_go_over") == 1) {
+//			examObj.NextSprite (spHead.spriteName);
+//			PlayerPrefs.DeleteKey("turn_go_over");
+//		}
 		
 		
 //		if (PlayerPrefs.GetInt ("cardReady") == 1 && initialized != 0) {
@@ -103,7 +136,7 @@ public class TurnManager : MonoBehaviour
 	}
 
 	void examPlay ()
-	{
+	{	    
 		if (transExample != null) {
 			transExample.GetComponent<UISlicedSprite> ().enabled = true;
 			transExample.animation.Play ("Center_UpRight");
@@ -120,7 +153,7 @@ public class TurnManager : MonoBehaviour
 			if (!Globe.sameSize.ContainsKey (name)) {
 				Globe.sameSize.Add (name, 1);
 			} 
-			getTransOfSprite (name).collider.enabled=false;//正确的禁止点击多次
+			getTransOfSprite (name).collider.enabled = false;//正确的禁止点击多次
 			turnTo (name, "TurnGo");
 			appriseExam ();
 		} else {
@@ -136,7 +169,9 @@ public class TurnManager : MonoBehaviour
 			UpdateTime (Globe.errorCount);
 				
 			if (Globe.errorCount <= 0) {
-				examObj.toPanelWin (0);
+				
+//				examObj.toPanelWin (0);
+				toPanelWin (0);
 			}
 		}
 	}
@@ -153,11 +188,11 @@ public class TurnManager : MonoBehaviour
 				turnTo (Globe.tmpString, "TurnBack");
 				turnTo (name, "TurnBack");	
 				
-				if (PlayerPrefs.GetInt("NowMode")==2) {
+				if (PlayerPrefs.GetInt ("NowMode") == 2) {
 					Globe.errorCount--;
 					UpdateTime (Globe.errorCount);
 					if (Globe.errorCount <= 0) {
-						examObj.toPanelWin (0);
+						toPanelWin (0);
 					}
 				}
 				
@@ -213,17 +248,24 @@ public class TurnManager : MonoBehaviour
 
 	public void init (int state)
 	{		
+		int _mode = PlayerPrefs.GetInt ("NowMode");
 		for (int i = 0; i < transform.GetChildCount(); i++) {
 			Transform _trans = transform.GetChild (i);
 //			Animation animate = _trans.animation;
 			
 			if (state == 1) {
 				_trans.animation.Play ("TurnGo");
+				_trans.collider.enabled = false;
 			} else if (state == 2) {
 				_trans.animation.Stop ();
+				if (_mode != 1) {
+					_trans.collider.enabled = true;
+				}
 			} else if (state == -1) {
 				_trans.animation ["TurnGo"].time = 0;
 				_trans.animation.Play ("TurnGo");
+			} else if (state == 3) {
+				_trans.collider.enabled = true;
 			}
 		}		
 		
@@ -233,7 +275,6 @@ public class TurnManager : MonoBehaviour
 			initialized = 2;
 			backTime = 30;//假设从100开始倒数，这个数值你可以自行修改呀		
 		}		
-		
 	}
 
 	bool IsNotCorrect2 (float euler)

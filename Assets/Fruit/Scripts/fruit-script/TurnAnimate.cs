@@ -27,16 +27,16 @@ public class TurnAnimate : MonoBehaviour
 		print ("The method or operation is not implemented.??" + e);
 	}
 	string playOver (string animateName)
-	{		
-//		if ( ProcessEvent== null)
-//                ProcessEvent += new ProcessDelegate(t_ProcessEvent);
-//            ProcessEvent(sender, e);
-//		print (Globe.sameSize[transform.name]);
-		if (animateName == "turn_go_over"  && PlayerPrefs.GetInt ("NowMode")!=1 && Globe.punish) {
+	{
+		if (animateName == "turn_go_over" && PlayerPrefs.GetInt("NowMode") !=1) {
 				SendMessageUpwards("doPunish",transform.name);			
-		}else if(animateName =="turn_back_over")
+		}
+		else if(animateName =="turn_back_over")
 		{
 			SendMessageUpwards("delayPunish",transform.name);	
+		}else if (animateName == "turn_go_over" && PlayerPrefs.GetInt("NowMode") ==1)
+		{
+			PlayerPrefs.SetInt ("turn_go_over",1);
 		}
 		return animateName;
 	}

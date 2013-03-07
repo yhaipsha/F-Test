@@ -3,12 +3,16 @@ using System.Collections;
 
 public class GamePauseAftermath : MonoBehaviour
 {
-
+	private GamePause game;
 	//清理卡牌
 	//清理关卡
 	// Use this for initialization
 	void Start ()
 	{
+//		examObj.EventReplace += new ExampleAtlas.replaceSprite (appriseExam);
+//		if (EventClicked != null) {
+//			
+//		}
 		
 	}
 	
@@ -22,9 +26,6 @@ public class GamePauseAftermath : MonoBehaviour
 
 	void OnClick ()
 	{
-		
-		
-		
 		if (transform.parent.name == "Buttons") {
 			GamePlayLayer gp =transGamePanel.GetComponent<GamePlayLayer> ();
 			if (resetPlay)

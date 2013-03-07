@@ -118,7 +118,7 @@ public class TurnRight2 : MonoBehaviour
 					
 				SendMessageUpwards("UpdateTime",3-Globe.differentSize.Count);				
 				if (Globe.differentSize.Count >= 3) {
-					ra.toPanelWin (0);
+//					toPanelWin (0);
 				}
 			}
 

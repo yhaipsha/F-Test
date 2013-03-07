@@ -43,8 +43,8 @@ public class HistoryInit : MonoBehaviour
 			GameObject o = (GameObject)Instantiate (prefab);
 			o.transform.parent = transform;
 			o.transform.localPosition = new Vector3 (i * widthV, 30f, 0f);
-			o.transform.localScale = new Vector3 (0.9f, 0.9f, 1f);
-			UISprite sp = o.GetComponentInChildren<UISprite> ();			
+			o.transform.localScale = new Vector3 (1.1f, 1.1f, 1f);
+			UISprite sp = o.transform.FindChild("item0").GetComponent<UISprite> ();			
 			sp.spriteName = atlasSpriteNames [i];
 			sp.MakePixelPerfect ();
 			setHui (i);

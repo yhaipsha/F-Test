@@ -11,6 +11,7 @@ public class ExampleAtlas : MonoBehaviour
 	private string[] atlases;
 	int index = 0;
 	int count=0;
+	bool clearance=false;
 	UISlicedSprite sprite;
 
 	void Start ()
@@ -18,7 +19,10 @@ public class ExampleAtlas : MonoBehaviour
 		sprite = GetComponent<UISlicedSprite> ();
 //		sprite.transform.rotation = Quaternion.Euler (0f, 180f, 0f);
 	}
-
+	void Update()
+	{
+		toPanelWin ();
+	}
 	public void NextSprite (string name)
 	{		
 		if (sprite == null) {
@@ -34,7 +38,9 @@ public class ExampleAtlas : MonoBehaviour
 				switch (PlayerPrefs.GetInt("NowMode")) {
 				case 1:
 					index=0;
-					toPanelWin(1);
+					clearance=true;
+					PlayerPrefs.SetInt("result",1);
+//					toPanelWin(1);
 					break;
 				case 2:
 					break;
@@ -56,17 +62,13 @@ public class ExampleAtlas : MonoBehaviour
 //				Globe.sameSize.Remove (name);
 //				Globe.sameSize.Add (name, _value - 1);			
 			}
-			
-			
-			//移空所有项，显示成功页面
-			
+						
+			//移空所有项，显示成功页面			
 //			sprite.spriteName = name;
 		} else {			
 			sprite.spriteName = name;
 			
-		}
-//		print ("Initialization... example of fruit name == "+name);
-		
+		}	
 		
 		
 //		sprite.transform.rotation = Quaternion.Euler (0f, 180f, 0f);
@@ -75,22 +77,35 @@ public class ExampleAtlas : MonoBehaviour
 		//return sprite.spriteName;
 	}
 	
-	public void toPanelWin (int result)
+	void toPanelWin ()
 	{
 		//写通关数据
 //		print(LitJsonUtil.readAll(Globe.jsonURL.Replace("file://",""), 0));
-        ;
-
-		transform.parent.parent.GetComponent<TweenPosition> ().Reset();		
+		
+//		transform.parent.parent.GetComponent<TweenPosition> ().Reset();		
 //		nextLayer.GetComponent<TweenPosition> ().Play (true);		
 //		nextLayer.GetComponent<GameWinLayer>().init(result);
-		PlayerPrefs.SetInt("result",result);
-		Application.LoadLevel("GameUpshot");
+		
+		if (PlayerPrefs.GetInt ("turn_go_over") == 1 && clearance) {			
+			PlayerPrefs.DeleteKey("turn_go_over");
+			Application.LoadLevel("GameUpshot");			
+		}
+//		PlayerPrefs.SetInt("result",result);
+//		Application.LoadLevel("GameUpshot");
 	}
+	
+	/// <summary>
+	/// 提示动画结束
+	/// </summary>
+	/// <returns>
+	/// The over.
+	/// </returns>
+	/// <param name='a'>
+	/// If set to <c>true</c> a.
+	/// </param>
 	public bool dollyOver(int a)
 	{
-//		animation.Stop();
-		PlayerPrefs.SetInt("game_animate_over",1);
+		PlayerPrefs.SetInt("animate_exam_over",1);
 		return true;
 	}
 }
